@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Panda Belajar Pecahan</title>
+<style>
+  body {
+    font-family: "Comic Sans MS", sans-serif;
+    background: linear-gradient(to bottom right, #ffe4f2, #d3e6ff);
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+  }
+  .page {
+    display: none;
+    padding: 30px;
+  }
+  .active {
+    display: block;
+  }
+  button {
+    background-color: #ff8fcf;
+    border: none;
+    color: white;
+    padding: 12px 18px;
+    border-radius: 12px;
+    margin: 10px;
+    cursor: pointer;
+    font-size: 18px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+    transition: transform 0.2s;
+  }
+  button:hover {
+    transform: scale(1.05);
+  }
+  .nav {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+  .circle {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    border: 3px solid #555;
+    margin: 20px auto;
+    position: relative;
+    background: conic-gradient(pink 0deg, pink 0deg, transparent 0deg);
+    box-sizing: border-box;
+  }
+  .lines::before, .lines::after {
+    content: "";
+    position: absolute;
+    top: 50%; left: 50%;
+    background: #555;
+    transform-origin: center;
+  }
+  .lines::before { width: 100%; height: 2px; transform: translate(-50%, -50%) rotate(0deg); }
+  .lines::after { width: 100%; height: 2px; transform: translate(-50%, -50%) rotate(90deg); }
+  .desc {
+    font-size: 20px;
+    color: #444;
+    margin-top: 10px;
+  }
+
+  /* small circle for quiz */
+  .small-circle {
+    width:120px; height:120px; border-radius:50%; border:2px solid #555;
+    margin:0 8px; display:inline-block; vertical-align:middle;
+    background: conic-gradient(#d6006c 0deg 0deg, rgba(255,255,255,0.97) 0deg 360deg);
+    cursor:pointer; box-shadow:0 6px 12px rgba(0,0,0,0.12);
+  }
+  .feedback { font-weight:bold; min-height:28px; margin-top:8px; }
+  .feedback.correct { color: #1a941a; } /* green */
+  .feedback.wrong { color: #d6006c; } /* pink */
+  .controls { margin-top:12px; }
+
+  @media (max-width:600px){
+    .circle{ width:160px; height:160px; }
+    .small-circle{ width:100px; height:100px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Halaman 1 -->
+<div class="page active" id="page1">
+  <h1>🐼 Halo, Ayo Kita Belajar Pecahan!</h1>
+  <p>Panda senang belajar tentang pecahan. Yuk kita mulai perjalanan belajar yang seru ini!</p>
+  <div class="nav">
+    <div></div>
+    <button id="goTo2">➡</button>
+  </div>
+</div>
+
+<!-- Halaman 2 -->
+<div class="page" id="page2">
+  <h2>Pemahaman Konsep Pecahan</h2>
+  <div class="circle lines" id="fractionCircle"></div>
+  <div class="desc" id="fractionDesc">Pilih salah satu pecahan di bawah</div>
+  <div class="controls">
+    <button class="frac-btn" data-num="1" data-den="2">1/2</button>
+    <button class="frac-btn" data-num="1" data-den="4">1/4</button>
+    <button class="frac-btn" data-num="1" data-den="8">1/8</button>
+  </div>
+  <div class="nav">
+    <button id="backTo1">⬅</button>
+    <button id="goTo3">➡</button>
+  </div>
+</div>
+
+<!-- Halaman 3 -->
+<div class="page" id="page3">
+  <h2>Menjumlahkan Pecahan</h2>
+  <div class="circle lines" id="sumCircle"></div>
+  <div class="desc" id="sumDesc">Mari kita lihat bagaimana 1/4 + 1/4 = 1/2</div>
+  <div class="controls">
+    <button id="stepBtn">Lanjutkan ▶</button>
+  </div>
+  <div class="nav">
+    <button id="backTo2">⬅</button>
+    <button id="goTo4">➡</button>
+  </div>
+</div>
+
+<!-- Halaman 4 (Kuis) -->
+<div class="page" id="page4">
+  <h2>🎯 Kuis Pecahan</h2>
+  <p class="desc">Pilih gambar yang tepat. Jawaban benar/kurang tepat akan muncul di bawah pilihan.</p>
+
+  <!-- Soal 1: 1/3 -->
+  <div style="margin-top:18px;">
+    <h3>1) Pilih gambar yang menunjukkan <b>1/3</b></h3>
+    <div id="q1-options" style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap; margin-top:10px;">
+      <!-- wrong: 1/4 -->
+      <div class="small-circle" data-q="1" data-correct="false" data-angle="90" title="1/4"></div>
+      <!-- correct: 1/3 -->
+      <div class="small-circle" data-q="1" data-correct="true" data-angle="120" title="1/3"></div>
+      <!-- wrong: 1/2 -->
+      <div class="small-circle" data-q="1" data-correct="false" data-angle="180" title="1/2"></div>
+    </div>
+    <div id="q1-feedback" class="feedback"></div>
+  </div>
+
+  <!-- Soal 2: 2/6 -->
+  <div style="margin-top:26px;">
+    <h3>2) Pilih gambar yang menunjukkan <b>2/6</b></h3>
+    <div id="q2-options" style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap; margin-top:10px;">
+      <!-- wrong: 1/12 -->
+      <div class="small-circle" data-q="2" data-correct="false" data-angle="30" title="1/12"></div>
+      <!-- correct: 2/6 ( = 120deg ) -->
+      <div class="small-circle" data-q="2" data-correct="true" data-angle="120" title="2/6"></div>
+      <!-- wrong: 1/2 -->
+      <div class="small-circle" data-q="2" data-correct="false" data-angle="180" title="1/2"></div>
+    </div>
+    <div id="q2-feedback" class="feedback"></div>
+  </div>
+
+  <div class="nav" style="margin-top:22px;">
+    <button id="backTo3">⬅</button>
+    <button id="finishBtn" disabled>▶</button>
+  </div>
+</div>
+
+<script>
+/* ---------- Navigation for pages 1..4 ---------- */
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const el = document.getElementById(id);
+  if (el) el.classList.add('active');
+}
+/* wire nav buttons */
+document.getElementById('goTo2').addEventListener('click', ()=> showPage('page2'));
+document.getElementById('backTo1').addEventListener('click', ()=> showPage('page1'));
+document.getElementById('goTo3').addEventListener('click', ()=> showPage('page3'));
+document.getElementById('backTo2').addEventListener('click', ()=> showPage('page2'));
+document.getElementById('goTo4').addEventListener('click', ()=> showPage('page4'));
+document.getElementById('backTo3').addEventListener('click', ()=> showPage('page3'));
+
+/* ---------- Page 2: showFraction (works with buttons) ---------- */
+const fracButtons = Array.from(document.querySelectorAll('.frac-btn'));
+const fractionCircle = document.getElementById('fractionCircle');
+const fractionDesc = document.getElementById('fractionDesc');
+
+function setCircleAngle(el, angleDeg, parts) {
+  // angleDeg number (e.g. 120), parts optional (for drawing separators if needed)
+  // Use layered background: fill color then light empty color
+  const filled = '#d6006c';
+  const empty = 'rgba(255,255,255,0.97)';
+  el.style.background = `conic-gradient(${filled} 0deg ${angleDeg}deg, ${empty} ${angleDeg}deg 360deg)`;
+}
+function showFraction(num, den) {
+  const angle = (num/den)*360;
+  setCircleAngle(fractionCircle, angle, den);
+  fractionDesc.innerHTML = `Pecahan ${num}/${den} berarti bagian dari keseluruhan dibagi ${den}, dan diambil ${num} bagian.`;
+  // mark active button
+  fracButtons.forEach(b => b.classList.remove('active'));
+  const activeBtn = fracButtons.find(b => Number(b.dataset.num)===num && Number(b.dataset.den)===den);
+  if (activeBtn) activeBtn.classList.add('active');
+}
+fracButtons.forEach(b => {
+  b.addEventListener('click', ()=> showFraction(Number(b.dataset.num), Number(b.dataset.den)));
+});
+// default show 1/2
+showFraction(1,2);
+
+/* ---------- Page 3: step through 1/4 + 1/4 = 1/2 ---------- */
+const sumCircle = document.getElementById('sumCircle');
+const sumDesc = document.getElementById('sumDesc');
+const stepBtn = document.getElementById('stepBtn');
+let sumStep = 0;
+function stepSum() {
+  sumStep++;
+  const filled = '#d6006c';
+  const empty = 'rgba(255,255,255,0.97)';
+  if (sumStep === 1) {
+    // show 1/4
+    setCircleAngle(sumCircle, 90, 4);
+    sumDesc.textContent = 'Langkah 1: Ini adalah 1/4 bagian dari lingkaran.';
+  } else if (sumStep === 2) {
+    // show 2/4 (still show as 180deg)
+    setCircleAngle(sumCircle, 180, 4);
+    sumDesc.textContent = 'Langkah 2: Tambahkan 1/4 lagi, sekarang menjadi 2/4 bagian.';
+  } else if (sumStep === 3) {
+    // show equivalence: 180deg but describe as 1/2
+    setCircleAngle(sumCircle, 180, 2);
+    sumDesc.textContent = 'Langkah 3: 2/4 sama besar dengan 1/2 dari keseluruhan.';
+    stepBtn.disabled = true;
+  }
+}
+stepBtn.addEventListener('click', stepSum);
+
+/* ---------- Page 4 (Quiz) ---------- */
+/* helper to set small circle visual by angle */
+function setSmallCircleVisual(el, angleDeg) {
+  const filled = '#d6006c';
+  const empty = 'rgba(255,255,255,0.97)';
+  el.style.background = `conic-gradient(${filled} 0deg ${angleDeg}deg, ${empty} ${angleDeg}deg 360deg)`;
+}
+
+/* initialize quiz visuals from data-angle attributes */
+document.querySelectorAll('.small-circle').forEach(el=>{
+  const ang = Number(el.getAttribute('data-angle')) || 0;
+  setSmallCircleVisual(el, ang);
+});
+
+/* quiz click handling */
+let q1Correct = false, q2Correct = false;
+function updateFinishButton() {
+  const finish = document.getElementById('finishBtn');
+  finish.disabled = !(q1Correct && q2Correct);
+}
+document.querySelectorAll('.small-circle').forEach(opt=>{
+  opt.addEventListener('click', ()=> {
+    const q = opt.getAttribute('data-q');
+    const correct = opt.getAttribute('data-correct') === 'true';
+    const feed = document.getElementById(`q${q}-feedback`);
+    if (correct) {
+      feed.textContent = 'Benar! 🎉';
+      feed.className = 'feedback correct';
+      if (q === '1') q1Correct = true;
+      if (q === '2') q2Correct = true;
+    } else {
+      feed.textContent = 'Coba lagi!';
+      feed.className = 'feedback wrong';
+      if (q === '1') q1Correct = false;
+      if (q === '2') q2Correct = false;
+    }
+    updateFinishButton();
+  });
+});
+
+/* finish button returns to page1 (or you can change behavior) */
+document.getElementById('finishBtn').addEventListener('click', ()=> {
+  if (!document.getElementById('finishBtn').disabled) {
+    alert('Bagus! Kamu menyelesaikan kuis. Kembali ke awal.');
+    showPage('page1');
+    // reset quiz
+    document.getElementById('q1-feedback').textContent = '';
+    document.getElementById('q2-feedback').textContent = '';
+    q1Correct = q2Correct = false;
+    updateFinishButton();
+  }
+});
+
+/* ensure initial active page state */
+showPage('page1');
+</script>
+</body>
+</html>
